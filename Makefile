@@ -1,33 +1,36 @@
 NAME	=	libftprintf.a
 
-SRCS	=	ft_printf.c ft_parsing.c \
-			ft_print_val.c
+SRCS	=	ft_printf.c ft_printf_parsing.c\
+			print_num.c ft_printf_parsing.c
 
-HEADER	=	libftprintf.h
+HEADER	=	ft_printf.h
 
-OBJS	=	$(SRCS:%.c=%.o)
+%.o : &.c $(HEADER)
+	@$(CC) $(CFLAGS) -c $< -O $@
+
+OBJ	=	$(SRCS:%.c=%.o)
+
 
 CC		=	gcc
 
-FLAGS	=	-Wall -Werror -Wextra -I $(HEADER)
+FLAGS	=	-Wall -Werror -Wextra
 
 .PHONY	:	all clean fclean re
 
-all		:	$(NAME)
+bonus		:	$(NAME)
 
-$(NAME)	:	$(OBJS) $(HEADER)
+$(NAME)	:	$(OBJ)
 	$(MAKE) all -C ./libft
 	$(MAKE) bonus -C ./libft
 	cp libft/libft.a $(NAME)
-	@ar rcs $(NAME) $?
+	@ar rcs $(NAME) $(OBJ)
 
-%.o : &.c $(HEADER)
-	@$(CC) $(CFLAGS) -CC $< -O $@
 
 clean	:	
 	@$(MAKE) clean -C ./libft
-	@rm -f $(OBJS) $(OBJS_B)
+	@rm -f $(OBJ)
 
 fclean	:	clean
+	@$(MAKE) fclean -C ./libft
 	@rm -f $(NAME)
 re		: fclean all

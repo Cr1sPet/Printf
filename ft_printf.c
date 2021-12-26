@@ -6,15 +6,13 @@
 /*   By: jchopped <jchopped@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/31 12:38:06 by jchopped          #+#    #+#             */
-/*   Updated: 2021/11/14 16:57:40 by jchopped         ###   ########.fr       */
+/*   Updated: 2021/11/16 16:49:52 by jchopped         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-#include "libft/libft.h"
 
-
-void default_init_flags(t_flags *flags)
+static void	default_init_flags(t_flags *flags)
 {
 	flags->specifier = 0;
 	flags->null_filler = 0;
@@ -27,42 +25,68 @@ void default_init_flags(t_flags *flags)
 	flags->dot = 0;
 }
 
-int format_processing (va_list fa, const char *f)
+static int	validated_flags(t_flags *flags)
 {
-	int	i;
-	int counter;
-	t_flags	flags;
+	if (flags->plus
+		&& ('i' != flags->specifier && 'd' != flags->specifier))
+		return (0);
+	if (flags->space && ('s' != flags->specifier
+			&& 'i' != flags->specifier && 'd' != flags->specifier))
+		return (0);
+	if (flags->hash && ('x' != flags->specifier && 'X' != flags->specifier))
+		return (0);
+	if (flags->dot && ('p' == flags->specifier))
+		return (0);
+	if (flags->null_filler && 'p' == flags->specifier)
+		return (0);
+	return (1);
+}
 
+static int	parse_print_val(t_flags *flags, va_list fa)
+{
+	int			ret_value;
+	char		*output_str;
+
+	ret_value = 0;
+	output_str = NULL;
+	if ('c' == flags->specifier)
+		ret_value = print_c(flags, fa);
+	else if ('s' == flags->specifier)
+		ret_value = print_s(flags, fa);
+	else if ('%' == flags->specifier)
+	{
+		ft_putchar_fd ('%', 1);
+		ret_value = 1;
+	}
+	else
+		ret_value = parse_print_numb(flags, fa, output_str, ret_value);
+	return (ret_value);
+}
+
+int	ft_printf(const char *f, ...)
+{
+	int		i;
+	int		counter;
+	t_flags	flags;
+	va_list	fa;
+
+	va_start(fa, f);
 	i = 0;
 	counter = 0;
-	while(f[i])
+	while (f[i])
 	{
 		if (f[i] != '%')
-			counter += write (1 , &f[i], 1);
+			counter += write(1, &f[i], 1);
 		else
 		{
 			if (!f[++i])
-				return(counter);
+				return (counter);
 			default_init_flags(&flags);
-			if (1 == ft_parsing(&flags, f, &i))
-				counter += ft_print_value(&flags, fa);
+			if (parsing(&flags, f, &i) && validated_flags(&flags))
+				counter += parse_print_val(&flags, fa);
 		}
 		i++;
 	}
-	return (counter);	
-}
-
-int ft_printf(const char *f, ...)
-{
-	int		ret; 
-	va_list	fa;
-
-	if (f && !f[0])
-		return(0);
-	if (1 == ft_strlen(f) && f[0] == '%')
-		return (-1);	
-	va_start(fa, f);
-	ret = format_processing(fa, f);
 	va_end (fa);
-	return (ret);
+	return (counter);
 }

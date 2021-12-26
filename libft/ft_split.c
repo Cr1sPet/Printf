@@ -6,7 +6,7 @@
 /*   By: jchopped <jchopped@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 15:11:01 by jchopped          #+#    #+#             */
-/*   Updated: 2021/10/17 16:47:41 by jchopped         ###   ########.fr       */
+/*   Updated: 2021/11/16 12:35:04 by jchopped         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,8 @@ char	**ft_split(char const *s, char c)
 
 	ok = 0;
 	res = (char **)malloc(sizeof(char *) * (count_words(s, c) + 1));
-    if ((void *)0 == res)
-        return ((void *)0);
+	if ((void *)0 == res)
+		return ((void *)0);
 	if ((void *)0 == split_work(s, res, c, ok))
 		return ((void *)0);
 	return (res);

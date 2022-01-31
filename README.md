@@ -17,9 +17,8 @@ The following transformations were implemented:
 * **%%** Prints a percent sign.
 
 All combinations of the following flags have been implemented :
- * ’-0.’
-The following flags have been implemented :
- ’# +’
+ * ’-0.’, ’# +’
+
 
 ### Clone project
 ```

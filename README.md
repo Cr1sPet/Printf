@@ -24,7 +24,7 @@ All combinations of the following flags have been implemented :
 ```
 git clone git@github.com:CrsPet/my_printf.git
 ```
-### How to use
+<!-- ### How to use
 ```
 cd my_printf
 make
@@ -39,6 +39,6 @@ make re to recompile this project.
 *input numbers - random sequence of unique int (integer)
 
 ```
----
+--- -->
 The project is written in strict accordance with [Norminette codestyle](https://github.com/42School/norminette)
 
